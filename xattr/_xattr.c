@@ -300,6 +300,7 @@ static ssize_t xattr_getxattr(const char *path, const char *name,
 static ssize_t xattr_fsetxattr(int fd, const char *name, void *value,
                                ssize_t size, u_int32_t position, int options)
 {
+    char *val = value;
     int xfd;
     ssize_t bytes = 0;
 
@@ -313,13 +314,13 @@ static ssize_t xattr_fsetxattr(int fd, const char *name, void *value,
 	return -1;
     }
     while (size > 0) {
-	bytes = write(xfd, value, size);
+	bytes = write(xfd, val, size);
 	if (bytes == -1) {
 	    close(xfd);
 	    return -1;
 	}
 	size -= bytes;
-	value += bytes;
+	val += bytes;
     }
     close(xfd);
     return 0;
